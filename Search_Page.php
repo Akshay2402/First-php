@@ -43,7 +43,7 @@ button:hover {
   <div class="container">
 
     <label><b>Search a employee</b></label>
-    <input type="text" placeholder="Enter employee name" name="name" required>     
+    <input type="text" placeholder="Enter employee first name" name="name" required>     
     <button type="submit">Search</button>
     
   </div>
@@ -72,11 +72,11 @@ if ($conn->connect_error) {
 }
 
 $result = mysqli_query($conn, "SELECT * FROM employees
-    WHERE first_name LIKE '%{$name}%' OR last_name LIKE '%{$name}%'");
+    WHERE first_name LIKE '{$name}'");
 
 while ($row = mysqli_fetch_array($result))
 {
-        echo $row['first_name'] . " " . $row['last_name'] . " " . $row['gender'] . " " . $row['emp_no'] . " " . $row['hire_date'] ;
+        echo "First name: " . $row['first_name'] . "&nbsp &nbsp &nbsp  Last name: " . $row['last_name'] . " &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Gender: " . $row['gender'] . "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Emp_id : " . $row['emp_no'] . "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Hire Date: " . $row['hire_date'] ;
         echo "<br>";
 }
     mysqli_close($con);
