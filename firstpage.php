@@ -39,7 +39,7 @@ button:hover {
 
 <h2>Know about your Employees </h2>
 
-<form>
+<form action="<?php $_PHP_SELF?>" method="POST">
   
 
   <div class="container">
@@ -48,7 +48,7 @@ button:hover {
 
    
         
-    <button type="submit">Search</button>
+    <button type="submit" >Search</button>
     
   </div>
 
@@ -56,10 +56,10 @@ button:hover {
     
   </div>
 </form>
- <?php
+<?php
 $servername = "localhost";
 $username = "root";
-$password = "password";//write your password here
+$password = "root";//write your password here
 $dbname = "employees";
 
 // Create connection
@@ -71,7 +71,7 @@ if ($conn->connect_error) {
     echo "Connected successful to $dbname</br>"; 
 }
 
-$sql = "SELECT first_name,last_name FROM employees";
+$sql = "SELECT first_name,last_name FROM employees WHERE first_name ='".$_POST['uname']."'" ;
 $result = $conn->query($sql);
 
 
