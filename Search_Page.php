@@ -72,7 +72,7 @@ if ($conn->connect_error) {
 }
 
 $result = mysqli_query($conn, "SELECT * FROM employees
-    WHERE first_name LIKE '{$name}'");
+    WHERE first_name LIKE '{$name}' OR last_name LIKE '{$name}'");
 
 while ($row = mysqli_fetch_array($result))
 {
