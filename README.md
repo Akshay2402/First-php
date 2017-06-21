@@ -1,2 +1,2 @@
 # First-php
-For leaninng purpose
+For learning purpose
