@@ -43,7 +43,8 @@ button:hover {
   <div class="container">
 
     <label><b>Search a employee</b></label>
-    <input type="text" placeholder="Enter employee first name" name="name" required>     
+    <input type="text" placeholder="Enter employee first name" name="name" required>  
+    <input type="text" placeholder="Enter employee last name" name="lname" required>		  
     <button type="submit">Search</button>
     
   </div>
@@ -66,13 +67,14 @@ $dbname = "employees";
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 $name = $_GET["name"];
+$lname= $_POST["lname"];
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
 $result = mysqli_query($conn, "SELECT * FROM employees
-    WHERE first_name LIKE '{$name}' OR last_name LIKE '{$name}'");
+    WHERE first_name LIKE '{$name}' and last_name LIKE '{$lname}'");
 
 while ($row = mysqli_fetch_array($result))
 {
