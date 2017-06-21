@@ -1,7 +1,7 @@
  <?php
 $servername = "localhost";
-$username = "root";
-$password = "mrunal123";
+$username = "yourUsername";
+$password = "yourPassword";
 $dbname = "employees";
 
 // Create connection
@@ -10,7 +10,7 @@ $conn = new mysqli($servername, $username, $password,$dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }else{
-	echo "Connected successful to $dbname"; 
+	echo "Connected successful to $dbname</br>"; 
 }
 
 $sql = "SELECT first_name,last_name FROM employees";
@@ -22,9 +22,8 @@ if ($result->num_rows > 0) {
     	echo $row["first_name"]." ".$row["last_name"]."</br>";
  	}
 }else {
-    echo "Error creating table: " . $conn->error;
+    echo "Error performing query " . $conn->error;
    
 }
-
 $conn->close();
 ?>
