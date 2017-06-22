@@ -45,9 +45,17 @@ button:hover {
 <body>
 <form = action = "<?php $_PHP_SELF ?>" method = "GET">
   <div class="container">
+<<<<<<< HEAD
   <label><b>Eoogle</b></label>
     <input type="text" placeholder="Search" style="width: 400px; height: 50px" name="name" required>     
     <button type="submit" style="width: 100px; height: 50px;">Search</button>
+=======
+
+    <label><b>Search a employee</b></label>
+    <input type="text" placeholder="Enter employee first name" name="name" required>  
+    <input type="text" placeholder="Enter employee last name" name="lname" required>		  
+    <button type="submit">Search</button>
+>>>>>>> 01e43afc1af7b5b4d46812d03e9a1703aba9f869
     
   </div>
 
@@ -70,12 +78,17 @@ $dbname = "employees";
 $conn = new mysqli($servername, $username, $password, $dbname);
 
 $name = $_GET["name"];
+<<<<<<< HEAD
 
+=======
+$lname= $_POST["lname"];
+>>>>>>> 01e43afc1af7b5b4d46812d03e9a1703aba9f869
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+<<<<<<< HEAD
 $buff = parseInput($name);
 
 switch ($buff) {
@@ -94,6 +107,10 @@ switch ($buff) {
         findDepartment($conn, $name);
         break;
 }
+=======
+$result = mysqli_query($conn, "SELECT * FROM employees
+    WHERE first_name LIKE '{$name}' and last_name LIKE '{$lname}'");
+>>>>>>> 01e43afc1af7b5b4d46812d03e9a1703aba9f869
 
 function findEmployee($conn, $name)
 {
