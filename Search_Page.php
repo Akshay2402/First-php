@@ -73,56 +73,80 @@ $name = $_GET["name"];
 
 $tokens = explode(" ", $name);
 
-if (sizeof($tokens) > 1)
-	echo "$tokens[0]  $tokens[1] <br>" ;
-
 // Check connection
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    die("Connection failed1: " . $conn->connect_error);
 }
 
 
-$buff = parseInput($name);
+if (sizeof($tokens) > 1)
+{
+	findEmployeeFullName($conn, $tokens);
+}
+else
+{
+	$buff = parseInput($name);
 
-switch ($buff) {
-    case 0:
-        # code...
-        findEmployee($conn, $name);
-        break;
-    
-    case 1:
-        # code...
-        findEmployeeByEmpNo($conn, $name);
-        break;
+	switch ($buff) {
+	    case 0:
+	        # code...
+	        findEmployee($conn, $name);
+	        break;
+	    
+	    case 1:
+	        # code...
+	        findEmployeeByEmpNo($conn, $name);
+	        break;
 
-    case 2:
-        # code...
-        findDepartment($conn, $name);
-        break;
+	    case 2:
+	        # code...
+	        findDepartment($conn, $name);
+	        break;
+	}
 }
 
+function findEmployeeFullName($conn, $tokens)
+{
+	# code...
+	$sql_query = "SELECT * FROM employees
+                    WHERE first_name = '$tokens[0]' and last_name = '$tokens[1]'";
+    $result = $conn->query($sql_query);
 
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()){
+           echo "Gender: " . $row['gender'] . "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Emp_id : " . $row['emp_no'] . "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Hire Date: " . $row['hire_date'] ;
+            echo "<br>";
+        }
+    }
+    else {
+       echo "Error performing query " . $conn->error;
+       
+    }
+
+}
 function findEmployee($conn, $name)
 {
     # code...
-     echo "in findEmployee<br>";
 
     $result = mysqli_query($conn, "SELECT * from employees,salaries 
     								WHERE employees.emp_no = salaries.emp_no
     								and first_name='$name' and to_date='9999-01-01'
     								ORDER BY salary desc limit 5");
 
+    	echo "Top 5 results are:<br><br";
+
         while ($row = mysqli_fetch_array($result)){
            echo "First name: " . $row['first_name'] . "&nbsp &nbsp &nbsp  Last name: " . $row['last_name'] . " &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Gender: " . $row['gender'] . "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Emp_id : " . $row['emp_no'] . "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Hire Date: " . $row['hire_date'] ;
             echo "<br>";
         }
-    mysqli_close($con);
+    mysqli_close($conn);
 }
 
 function findEmployeeByEmpNo($conn, $name)
 {
     # code...
-     echo "in findEmployeeByEmpNo<br>";
+
     $sql_query = "SELECT * FROM employees
                     WHERE emp_no = $name";
     $result = $conn->query($sql_query);
@@ -156,13 +180,13 @@ function findEmployeeByEmpNo($conn, $name)
     }
 
 
-    mysqli_close($con);
+    mysqli_close($conn);
 }
 
 function findDepartment($conn, $name)
 {
     # code...
-    echo "in findDepartment<br>";
+
     $sql_query = "SELECT * FROM departments
                     WHERE dept_no = '{$name}'";
     $result = $conn->query($sql_query);
@@ -196,7 +220,7 @@ function findDepartment($conn, $name)
        
     }
 
-    mysqli_close($con);
+    mysqli_close($conn);
 
 }
 function parseInput(string $value)
