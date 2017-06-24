@@ -71,6 +71,11 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 
 $name = $_GET["name"];
 
+$tokens = explode(" ", $name);
+
+if (sizeof($tokens) > 1)
+	echo "$tokens[0]  $tokens[1] <br>" ;
+
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -100,34 +105,24 @@ switch ($buff) {
 function findEmployee($conn, $name)
 {
     # code...
-    $sql_query = "SELECT * FROM employees
-                    WHERE (first_name LIKE '{$name}' OR last_name LIKE '{$name}') AND 
-                    emp_no IN (
-                    SELECT emp_no
-                    FROM salaries
-                    ORDER BY salary DESC)";
+     echo "in findEmployee<br>";
 
-    $result = $conn->query($sql_query);
+    $result = mysqli_query($conn, "SELECT * from employees,salaries 
+    								WHERE employees.emp_no = salaries.emp_no
+    								and first_name='$name' and to_date='9999-01-01'
+    								ORDER BY salary desc limit 5");
 
-    echo $result;
-    if ($result->num_rows > 0) {
-        $i = 0;
-        while ($row = $result->fetch_assoc() && $i < 5){
+        while ($row = mysqli_fetch_array($result)){
            echo "First name: " . $row['first_name'] . "&nbsp &nbsp &nbsp  Last name: " . $row['last_name'] . " &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Gender: " . $row['gender'] . "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Emp_id : " . $row['emp_no'] . "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Hire Date: " . $row['hire_date'] ;
             echo "<br>";
-            $i++;
         }
-    }
-    else {
-       echo "Error performing query " . $conn->error;
-       
-    }
     mysqli_close($con);
 }
 
 function findEmployeeByEmpNo($conn, $name)
 {
     # code...
+     echo "in findEmployeeByEmpNo<br>";
     $sql_query = "SELECT * FROM employees
                     WHERE emp_no = $name";
     $result = $conn->query($sql_query);
@@ -143,12 +138,31 @@ function findEmployeeByEmpNo($conn, $name)
        echo "Error performing query " . $conn->error;
        
     }
+
+	$sql_query = "SELECT salary FROM salaries
+                    WHERE emp_no = $name and to_date = '9999-01-01' "; 
+    $result = $conn->query($sql_query);
+
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()){
+           echo "Current Salary: " . $row['salary'] ;
+            echo "<br>";
+        }
+    }
+    else {
+       echo "Error performing query " . $conn->error;
+       
+    }
+
+
     mysqli_close($con);
 }
 
 function findDepartment($conn, $name)
 {
     # code...
+    echo "in findDepartment<br>";
     $sql_query = "SELECT * FROM departments
                     WHERE dept_no = '{$name}'";
     $result = $conn->query($sql_query);
@@ -158,25 +172,44 @@ function findDepartment($conn, $name)
         while ($row = $result->fetch_assoc()) {
             # code...
             echo "its department of ".$row['dept_name'];
+            echo "<br><br>";
         }
     }
     else {
        echo "Error performing query " . $conn->error;
        
     }
+
+    $sql_query = "SELECT * FROM employees, dept_manager
+                    WHERE employees.emp_no = dept_manager.emp_no and dept_no = '{$name}' and to_date='9999-01-01'";
+    $result = $conn->query($sql_query);
+
+    if ($result->num_rows > 0)
+    {
+        while ($row = $result->fetch_assoc()) {
+            # code...
+            echo "dept_manager is ". $row['first_name'] . "&nbsp &nbsp &nbsp  Last name: " . $row['last_name'] . " &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Gender: " . $row['gender'] . "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Emp_id : " . $row['emp_no'] . "&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp Hire Date: " . $row['hire_date'] ;
+        }
+    }
+    else {
+       echo "Error performing query " . $conn->error;
+       
+    }
+
     mysqli_close($con);
 
 }
 function parseInput(string $value)
 {
     # code...
+
     if ( ord($value) < 123 && ord($value) > 96)
     {
-        if ( $value[1]>123 || $value[1]<96 ) {
-            # code...
-            return 2;
-        }
-    
+   	    if (is_numeric($value[1])) 
+	    {
+	    	# code...
+	    	return 2;
+		}
         return 0;
     }
     else
